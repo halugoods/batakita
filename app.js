@@ -74,6 +74,7 @@ const chainScenario = document.querySelector("#chainScenario");
 const contractAssetLabel = document.querySelector("#contractAssetLabel");
 const contractMintLabel = document.querySelector("#contractMintLabel");
 const contractShareLabel = document.querySelector("#contractShareLabel");
+const contractCode = document.querySelector("#contractCode");
 const chainStatus = document.querySelector("#chainStatus");
 const chainBlock = document.querySelector("#chainBlock");
 const chainOrder = document.querySelector("#chainOrder");
@@ -183,8 +184,14 @@ function makeHash(input) {
     hash = Math.imul(hash, 16777619);
   }
 
-  const base = (hash >>> 0).toString(16).padStart(8, "0");
-  return `0x${base}${base.slice(2)}${base.slice(0, 6)}${base.slice(4)}`;
+  let seed = hash >>> 0;
+  let hex = "";
+  for (let index = 0; index < 8; index += 1) {
+    seed = Math.imul(seed ^ (index + 1), 16777619) >>> 0;
+    hex += seed.toString(16).padStart(8, "0");
+  }
+
+  return `0x${hex}`;
 }
 
 function setTechStep(stepIndex, isConfirmed = false) {
@@ -214,6 +221,49 @@ function renderLedgerRows(snapshot, txHash) {
     .join("");
 }
 
+function renderContractCode(snapshot, txHash) {
+  const shareBps = Math.round(snapshot.ownership * 10_000);
+  const modeFunction = snapshot.mode === "profit" ? "recordProfit" : "recordRentDistribution";
+  const modeComment = snapshot.mode === "profit" ? "profit operasional" : "sewa bersih";
+
+  contractCode.textContent = `// BataKita smart contract simulation
+// Simplified Solidity-style pseudo-code, not production code.
+contract BataKitaAsset {
+    string public assetName = ${JSON.stringify(snapshot.assetName)};
+    uint256 public targetFunding = ${Math.round(snapshot.assetValue)}; // ${snapshot.targetLabel}
+    uint256 public unitPrice = ${Math.round(snapshot.unitPrice)};
+    uint256 public totalUnits = ${Math.max(Math.floor(snapshot.assetValue / snapshot.unitPrice), 1)};
+
+    mapping(address => bool) public whitelist;
+    mapping(address => uint256) public units;
+
+    event UnitMinted(address indexed user, uint256 unitAmount, uint256 rupiahPaid);
+    event DistributionRecorded(uint256 cashflow, uint256 userShareBps, bytes32 txHash);
+
+    function whitelistUser(address user) external onlyOperator {
+        whitelist[user] = true;
+    }
+
+    function mintUnit(address user, uint256 rupiahPaid) external onlyOperator {
+        require(whitelist[user], "KYC_REQUIRED");
+        require(rupiahPaid >= unitPrice, "ORDER_TOO_SMALL");
+
+        uint256 unitAmount = rupiahPaid / unitPrice;
+        units[user] += unitAmount;
+
+        emit UnitMinted(user, unitAmount, rupiahPaid);
+    }
+
+    function ${modeFunction}(uint256 cashflow) external onlySPV {
+        // cashflow = ${modeComment} dari aset off-chain
+        uint256 userShareBps = ${shareBps};
+        bytes32 txHash = ${txHash};
+
+        emit DistributionRecorded(cashflow, userShareBps, txHash);
+    }
+}`;
+}
+
 function renderTechSimulation() {
   const snapshot = getTechSnapshot();
   const hashInput = `${snapshot.assetName}:${snapshot.orderValue}:${snapshot.units}:${snapshot.rate}:${snapshot.mode}`;
@@ -230,6 +280,7 @@ function renderTechSimulation() {
   chainShare.textContent = formatPercent(snapshot.ownership * 100);
   chainDistribution.textContent = formatRupiah(snapshot.distribution);
   chainHash.textContent = txHash;
+  renderContractCode(snapshot, txHash);
   chainStatus.textContent =
     techStatus === "confirmed"
       ? "Confirmed on demo chain"

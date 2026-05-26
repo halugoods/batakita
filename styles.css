@@ -688,6 +688,47 @@ input[type="range"] {
   color: var(--leaf);
 }
 
+.contract-code-panel {
+  margin-bottom: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(55, 255, 139, 0.28);
+  border-radius: 8px;
+  background: #020403;
+}
+
+.contract-code-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(55, 255, 139, 0.18);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.contract-code-head strong {
+  color: var(--leaf);
+}
+
+.contract-code-panel pre {
+  max-height: 320px;
+  margin: 0;
+  overflow: auto;
+  padding: 16px;
+  color: #e9fff0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.82rem;
+  line-height: 1.62;
+  white-space: pre;
+}
+
+.contract-code-panel p {
+  margin: 0;
+  padding: 0 16px 16px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
 .tech-actions {
   display: flex;
   flex-wrap: wrap;
