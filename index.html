@@ -363,6 +363,35 @@
               <span id="chainScenario">Lahan dan bangunan disewa tenant</span>
               <strong>Demo ledger</strong>
             </div>
+            <form class="tech-custom-form" aria-label="Custom simulasi smart contract">
+              <label>
+                <span>Nama aset</span>
+                <input id="techAssetNameInput" type="text" value="Lahan dan bangunan disewa tenant" />
+              </label>
+              <label>
+                <span>Target dana</span>
+                <input id="techTargetInput" type="number" min="1000000" step="1000000" value="1650000000" />
+              </label>
+              <label>
+                <span>Order simulasi</span>
+                <input id="techOrderInput" type="number" min="1000" step="1000" value="2400000" />
+              </label>
+              <label>
+                <span>Unit token</span>
+                <input id="techUnitInput" type="number" min="1000" step="1000" value="1000" />
+              </label>
+              <label>
+                <span>Yield/profit</span>
+                <input id="techRateInput" type="number" min="0" max="30" step="0.1" value="6.9" />
+              </label>
+              <label>
+                <span>Tipe hasil</span>
+                <select id="techModeInput">
+                  <option value="yield">Distribusi sewa</option>
+                  <option value="profit">Profit operasional</option>
+                </select>
+              </label>
+            </form>
             <div class="contract-steps" aria-label="Tahapan smart contract">
               <div class="contract-step is-active" data-tech-step="0">
                 <i data-lucide="user-check" aria-hidden="true"></i>
@@ -399,6 +428,10 @@
               <button class="btn secondary" id="contractResetButton" type="button">
                 <i data-lucide="rotate-ccw" aria-hidden="true"></i>
                 Reset
+              </button>
+              <button class="btn secondary" id="contractSyncButton" type="button">
+                <i data-lucide="link" aria-hidden="true"></i>
+                Sync Kalkulator
               </button>
             </div>
           </div>

@@ -42,6 +42,17 @@ const formatPercent = (value) =>
     maximumFractionDigits: 3,
   }).format(value)}%`;
 
+const formatShortRupiah = (value) => {
+  const number = Number(value) || 0;
+  const formatter = new Intl.NumberFormat("id-ID", {
+    maximumFractionDigits: 2,
+  });
+
+  if (number >= 1_000_000_000) return `Rp${formatter.format(number / 1_000_000_000)} M`;
+  if (number >= 1_000_000) return `Rp${formatter.format(number / 1_000_000)} Jt`;
+  return formatRupiah(number);
+};
+
 const monthlyInput = document.querySelector("#monthlyInput");
 const monthInput = document.querySelector("#monthInput");
 const yieldInput = document.querySelector("#yieldInput");
@@ -73,10 +84,18 @@ const chainHash = document.querySelector("#chainHash");
 const ledgerList = document.querySelector("#ledgerList");
 const contractSimButton = document.querySelector("#contractSimButton");
 const contractResetButton = document.querySelector("#contractResetButton");
+const contractSyncButton = document.querySelector("#contractSyncButton");
+const techAssetNameInput = document.querySelector("#techAssetNameInput");
+const techTargetInput = document.querySelector("#techTargetInput");
+const techOrderInput = document.querySelector("#techOrderInput");
+const techUnitInput = document.querySelector("#techUnitInput");
+const techRateInput = document.querySelector("#techRateInput");
+const techModeInput = document.querySelector("#techModeInput");
 const techSteps = Array.from(document.querySelectorAll("[data-tech-step]"));
 let techTimer;
 let techStatus = "ready";
 let activeTechStep = 0;
+let isTechCustom = false;
 
 function getSimulationSnapshot() {
   const monthly = Number(monthlyInput.value);
@@ -95,6 +114,65 @@ function getSimulationSnapshot() {
     units,
     ownership,
     distribution,
+  };
+}
+
+function getScenarioMode() {
+  return currentScenario.distributionLabel.toLowerCase().includes("profit") ? "profit" : "yield";
+}
+
+function getModeLabels(mode) {
+  if (mode === "profit") {
+    return {
+      rateLabel: "Profit operasional simulasi",
+      distributionLabel: "Estimasi profit/tahun",
+      ledgerLabel: "Profit",
+    };
+  }
+
+  return {
+    rateLabel: "Yield sewa bersih simulasi",
+    distributionLabel: "Estimasi distribusi/tahun",
+    ledgerLabel: "Distribusi",
+  };
+}
+
+function syncTechInputsFromSimulation() {
+  const snapshot = getSimulationSnapshot();
+
+  techAssetNameInput.value = currentScenario.title;
+  techTargetInput.value = String(currentScenario.assetValue);
+  techOrderInput.value = String(snapshot.total);
+  techUnitInput.value = String(unitPrice);
+  techRateInput.value = String(Number(yieldInput.value));
+  techModeInput.value = getScenarioMode();
+}
+
+function getTechSnapshot() {
+  if (!isTechCustom) syncTechInputsFromSimulation();
+
+  const assetName = techAssetNameInput.value.trim() || "Aset properti produktif";
+  const assetValue = Math.max(Number(techTargetInput.value) || currentScenario.assetValue, 1);
+  const orderValue = Math.max(Number(techOrderInput.value) || unitPrice, 0);
+  const techUnitPrice = Math.max(Number(techUnitInput.value) || unitPrice, 1);
+  const rate = Math.max(Number(techRateInput.value) || 0, 0);
+  const mode = techModeInput.value || getScenarioMode();
+  const units = Math.floor(orderValue / techUnitPrice);
+  const ownership = orderValue / assetValue;
+  const distribution = orderValue * (rate / 100);
+
+  return {
+    assetName,
+    assetValue,
+    targetLabel: formatShortRupiah(assetValue),
+    orderValue,
+    unitPrice: techUnitPrice,
+    rate,
+    mode,
+    units,
+    ownership,
+    distribution,
+    ...getModeLabels(mode),
   };
 }
 
@@ -121,7 +199,7 @@ function renderLedgerRows(snapshot, txHash) {
     ["Whitelist", "KYC user lolos"],
     ["Mint", `${new Intl.NumberFormat("id-ID").format(snapshot.units)} unit`],
     ["Hash", `${txHash.slice(0, 10)}...${txHash.slice(-6)}`],
-    ["Distribusi", formatRupiah(snapshot.distribution)],
+    [snapshot.ledgerLabel, formatRupiah(snapshot.distribution)],
   ];
 
   ledgerList.innerHTML = rows
@@ -137,17 +215,17 @@ function renderLedgerRows(snapshot, txHash) {
 }
 
 function renderTechSimulation() {
-  const snapshot = getSimulationSnapshot();
-  const hashInput = `${currentScenario.title}:${snapshot.total}:${snapshot.units}:${yieldInput.value}`;
+  const snapshot = getTechSnapshot();
+  const hashInput = `${snapshot.assetName}:${snapshot.orderValue}:${snapshot.units}:${snapshot.rate}:${snapshot.mode}`;
   const txHash = makeHash(hashInput);
-  const blockNumber = 204817 + Math.round(snapshot.total / unitPrice) + Math.round(currentScenario.assetValue / 100_000_000);
+  const blockNumber = 204817 + Math.round(snapshot.orderValue / snapshot.unitPrice) + Math.round(snapshot.assetValue / 100_000_000);
 
-  chainScenario.textContent = currentScenario.title;
-  contractAssetLabel.textContent = currentScenario.targetLabel;
+  chainScenario.textContent = snapshot.assetName;
+  contractAssetLabel.textContent = snapshot.targetLabel;
   contractMintLabel.textContent = `${new Intl.NumberFormat("id-ID").format(snapshot.units)} unit`;
   contractShareLabel.textContent = formatPercent(snapshot.ownership * 100);
   chainBlock.textContent = `Block #${new Intl.NumberFormat("id-ID").format(blockNumber)}`;
-  chainOrder.textContent = formatRupiah(snapshot.total);
+  chainOrder.textContent = formatRupiah(snapshot.orderValue);
   chainUnits.textContent = `${new Intl.NumberFormat("id-ID").format(snapshot.units)} unit`;
   chainShare.textContent = formatPercent(snapshot.ownership * 100);
   chainDistribution.textContent = formatRupiah(snapshot.distribution);
@@ -188,6 +266,7 @@ function updateSimulation() {
 
 function setScenario(scenarioKey) {
   currentScenario = scenarios[scenarioKey] || scenarios.minimarket;
+  isTechCustom = false;
   yieldInput.value = String(currentScenario.rate);
   updateSimulation();
 }
@@ -248,6 +327,22 @@ contractResetButton.addEventListener("click", () => {
   techStatus = "ready";
   activeTechStep = 0;
   renderTechSimulation();
+});
+
+contractSyncButton.addEventListener("click", () => {
+  isTechCustom = false;
+  techStatus = "ready";
+  activeTechStep = 0;
+  updateSimulation();
+});
+
+[techAssetNameInput, techTargetInput, techOrderInput, techUnitInput, techRateInput, techModeInput].forEach((input) => {
+  input.addEventListener("input", () => {
+    isTechCustom = true;
+    techStatus = "ready";
+    activeTechStep = 0;
+    renderTechSimulation();
+  });
 });
 
 document.querySelector("#waitlistButton").addEventListener("click", () => {

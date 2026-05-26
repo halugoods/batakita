@@ -594,6 +594,39 @@ input[type="range"] {
   color: var(--muted);
 }
 
+.tech-custom-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.tech-custom-form label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.tech-custom-form input,
+.tech-custom-form select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(55, 255, 139, 0.28);
+  border-radius: 8px;
+  color: #f3fff6;
+  background: #020403;
+  padding: 0 11px;
+  outline: none;
+}
+
+.tech-custom-form input:focus,
+.tech-custom-form select:focus {
+  border-color: rgba(55, 255, 139, 0.74);
+  box-shadow: 0 0 0 3px rgba(55, 255, 139, 0.12);
+}
+
 .contract-steps {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -1462,6 +1495,10 @@ dl div {
   }
 
   .chain-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tech-custom-form {
     grid-template-columns: 1fr;
   }
 
