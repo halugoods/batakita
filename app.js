@@ -1,5 +1,5 @@
 const assetValue = 1_650_000_000;
-const unitPrice = 10_000;
+const unitPrice = 1_000;
 const whatsappNumber = "6285156955735";
 
 const formatRupiah = (value) =>
@@ -61,7 +61,7 @@ document.querySelectorAll("[data-asset]").forEach((button) => {
       franchise:
         "Tesis: franchise memberi potensi profit operasional, tetapi underwriting harus menghitung omzet konservatif, stok, pegawai, royalti, sewa, shrinkage, dan modal kerja.",
       opportunity:
-        "Tesis: properti opportunity lain hanya masuk jika punya tenant jelas, kontrak tertulis, legal lengkap, skenario keluar, dan cashflow yang bisa diaudit.",
+        "Tesis: aset properti produktif lain hanya masuk jika punya tenant jelas, kontrak tertulis, legal lengkap, skenario keluar, dan cashflow yang bisa diaudit.",
     };
 
     const message = map[button.dataset.asset];
@@ -78,14 +78,63 @@ document.querySelectorAll("[data-asset]").forEach((button) => {
 document.querySelector("#waitlistButton").addEventListener("click", () => {
   const status = document.querySelector("#formStatus");
   const name = document.querySelector("#nameInput")?.value?.trim() || "Saya";
-  const budget = document.querySelector('select[name="budget"]')?.value || "Rp10.000 - Rp50.000";
+  const budget = document.querySelector('select[name="budget"]')?.value || "Rp1.000 - Rp10.000";
   const message = `Halo, saya ${name}. Saya tertarik join waitlist BataKita. by Halu Goods untuk tokenisasi sewa lahan/franchise ritel. Nominal nyaman saya: ${budget}.`;
   status.textContent = "Membuka WhatsApp untuk join waitlist...";
   window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
 });
 
+function initMobileAutoSliders() {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const mobileQuery = window.matchMedia("(max-width: 700px)");
+  const sliderSelectors = [".signal-strip", ".product-grid", ".asset-grid", ".flow-list", ".research-grid"];
+  const sliders = sliderSelectors.flatMap((selector) => Array.from(document.querySelectorAll(selector)));
+
+  if (!sliders.length) return;
+
+  let timers = [];
+  const pausedUntil = new WeakMap();
+  const stop = () => {
+    timers.forEach((timer) => window.clearInterval(timer));
+    timers = [];
+  };
+
+  sliders.forEach((slider) => {
+    const pause = () => {
+      pausedUntil.set(slider, Date.now() + 8000);
+    };
+
+    ["pointerdown", "touchstart", "wheel", "focusin"].forEach((eventName) => {
+      slider.addEventListener(eventName, pause, { passive: true });
+    });
+  });
+
+  const start = () => {
+    stop();
+    if (!mobileQuery.matches || prefersReducedMotion.matches) return;
+
+    sliders.forEach((slider, index) => {
+      const timer = window.setInterval(() => {
+        if (Date.now() < (pausedUntil.get(slider) || 0) || slider.scrollWidth <= slider.clientWidth) return;
+
+        const cards = Array.from(slider.children);
+        const currentIndex = cards.findIndex((card) => card.offsetLeft >= slider.scrollLeft - 4);
+        const nextIndex = currentIndex >= cards.length - 1 ? 0 : Math.max(currentIndex + 1, 1);
+        slider.scrollTo({ left: cards[nextIndex]?.offsetLeft || 0, behavior: "smooth" });
+      }, 3400 + index * 350);
+
+      timers.push(timer);
+    });
+  };
+
+  mobileQuery.addEventListener("change", start);
+  prefersReducedMotion.addEventListener("change", start);
+  start();
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   updateSimulation();
+  initMobileAutoSliders();
   if (window.lucide) window.lucide.createIcons();
 });
 

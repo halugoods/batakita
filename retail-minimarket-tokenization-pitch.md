@@ -4,7 +4,7 @@
 
 **BataKita Retail Income**
 
-Platform untuk membantu warga lokal dan anak muda daerah ikut punya eksposur ekonomi dari properti produktif yang disewa tenant kuat seperti minimarket, apotek, klinik, dapur produksi, atau ritel harian.
+Platform untuk membantu warga lokal dan anak muda daerah ikut punya eksposur ekonomi dari properti produktif yang disewa tenant kuat seperti minimarket, franchise ritel, atau peluang komersial sejenis.
 
 Konsep utama: **bukan jual token Indomaret/Alfamart, bukan buka toko ramai-ramai, tapi membuat akses ke aset properti yang menghasilkan sewa.**
 
@@ -22,7 +22,7 @@ Masalahnya: pola seperti ini biasanya hanya bisa dimainkan orang yang punya moda
 
 ### 1. Landlord Model
 
-SPV membeli atau menguasai tanah/bangunan. Properti disewakan ke tenant seperti minimarket, apotek, klinik, atau bisnis harian lain. Investor kecil mendapatkan bagian dari sewa bersih dan potensi kenaikan nilai aset.
+SPV membeli atau menguasai tanah/bangunan. Properti disewakan ke tenant seperti minimarket, franchise ritel, atau bisnis komersial lain yang punya kontrak jelas. Investor kecil mendapatkan bagian dari sewa bersih dan potensi kenaikan nilai aset.
 
 Ini model yang paling cocok untuk tokenisasi karena aset utamanya jelas: **tanah/bangunan + kontrak sewa.**
 
@@ -65,14 +65,14 @@ Asumsi aset:
 - Tanah + bangunan: Rp1.500.000.000
 - Biaya legal, pajak, setup, cadangan: Rp150.000.000
 - Total kebutuhan dana: Rp1.650.000.000
-- Unit ekonomi: 33.000 unit
-- Harga per unit: Rp50.000
+- Unit ekonomi: 1.650.000 unit
+- Harga per unit: Rp1.000
 - Sewa kotor: Rp150.000.000 per tahun
 - Biaya admin, pajak, maintenance, cadangan: Rp35.000.000 per tahun
 - Sewa bersih indikatif: Rp115.000.000 per tahun
 - Yield bersih indikatif terhadap total dana: sekitar 6,97% per tahun
 
-Jika seseorang punya Rp500.000, dia memegang 10 unit. Porsi ekonominya sekitar 0,0303%. Jika sewa bersih tahunan Rp115 juta, estimasi distribusi kotornya sekitar Rp34.845 per tahun sebelum pajak/biaya personal.
+Jika seseorang punya Rp500.000, dia memegang 500 unit. Porsi ekonominya sekitar 0,0303%. Jika sewa bersih tahunan Rp115 juta, estimasi distribusi kotornya sekitar Rp34.845 per tahun sebelum pajak/biaya personal.
 
 Angka ini tidak membuat orang kaya cepat. Tapi ini membuat orang mulai membangun aset secara disiplin dari nominal kecil.
 
@@ -221,12 +221,12 @@ Untuk minimarket/toko swalayan, aturan daerah penting. Permendag 23/2021 menjadi
 ### Minggu 7-8: Validasi Tenant
 
 - Ajukan lokasi ke channel resmi atau jaringan partner.
-- Cari juga tenant alternatif: apotek, klinik, laundry, toko bangunan kecil, coffee chain lokal, gudang last-mile, atau dapur produksi.
+- Cari juga tenant komersial alternatif dengan kontrak jelas, kebutuhan lokasi nyata, dan cashflow yang bisa diaudit.
 
 ### Minggu 9-12: Pitch Waitlist
 
 - Buka waitlist edukasi.
-- Target: 300-1.000 orang lokal yang mau mulai Rp50 ribu-Rp500 ribu per bulan.
+- Target: 300-1.000 orang lokal yang mau mulai Rp1 ribu-Rp500 ribu per bulan.
 - Belum menerima dana investasi sampai struktur legal siap.
 
 ## Script Pitch Publik 60 Detik
@@ -261,4 +261,3 @@ Konsep ini fresh bukan karena "blockchain properti", tapi karena menggabungkan t
 3. pencatatan transparan yang siap dibawa ke struktur legal/berizin.
 
 Mulai dari kabupaten/provinsi bukan nanggung. Justru itu keunggulan awal: kamu bisa survei lokasi, bicara dengan orang lokal, dan membangun trust dari aset yang benar-benar dekat dengan kehidupan masyarakat.
-

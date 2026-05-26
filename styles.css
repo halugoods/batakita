@@ -370,6 +370,11 @@ h3 {
   padding: 20px;
 }
 
+.asset-actions {
+  display: grid;
+  gap: 10px;
+}
+
 .asset-meta {
   display: flex;
   flex-wrap: wrap;
@@ -410,6 +415,10 @@ dd {
 }
 
 .asset-button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 44px;
   border: 1px solid var(--ink);
@@ -418,6 +427,17 @@ dd {
   background: #fff;
   cursor: pointer;
   font-weight: 900;
+  text-decoration: none;
+}
+
+.asset-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.simulation-button {
+  color: #07100a;
+  background: var(--leaf);
 }
 
 .simulator-band {
@@ -606,6 +626,12 @@ input[type="range"] {
 
 .founder-copy {
   max-width: 760px;
+}
+
+.founder-name {
+  margin-bottom: 10px;
+  color: var(--leaf);
+  font-size: 1.02rem;
 }
 
 .founder-copy p:not(.eyebrow) {
@@ -1059,6 +1085,11 @@ dl div {
   border-color: rgba(55, 255, 139, 0.5);
   color: var(--leaf);
   background: #07100a;
+}
+
+.simulation-button {
+  color: #07100a;
+  background: var(--leaf);
 }
 
 .simulator-band {

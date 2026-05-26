@@ -13,7 +13,7 @@ Masalahnya sederhana: banyak anak muda ingin punya aset, tapi harga properti dan
 1. Tim kurasi mencari aset produktif seperti co-living, kos, rumah sewa, atau ruko.
 2. Properti melalui legal check, valuasi, proyeksi sewa, dan review risiko.
 3. Aset dimiliki atau dikelola oleh SPV/badan hukum.
-4. Nilai ekonomi aset dipecah menjadi unit kecil, misalnya Rp50.000 per unit.
+4. Nilai ekonomi aset dipecah menjadi unit kecil, misalnya Rp1.000 per unit.
 5. User daftar, KYC, membaca disclosure risiko, lalu membayar dengan Rupiah.
 6. Smart contract mencatat supply unit, whitelist holder, transaksi, dan distribusi.
 7. Sewa bersih dibagikan proporsional sesuai porsi unit.
@@ -51,4 +51,3 @@ Tahap validasi bisa dilakukan hampir tanpa modal besar: landing page, konten edu
 ## Copy Pitch Singkat
 
 "BataKita bukan menjual mimpi cepat kaya. Kami membangun jembatan agar anak muda bisa mulai belajar dan punya eksposur ekonomi ke properti dari nominal kecil, dengan riset aset, transparansi smart contract, dan struktur legal yang siap dikembangkan bersama partner berizin."
-
