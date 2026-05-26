@@ -184,7 +184,7 @@
                   <i data-lucide="bar-chart-3" aria-hidden="true"></i>
                   Lihat tesis
                 </button>
-                <a class="asset-button simulation-button" href="#simulasi">
+                <a class="asset-button simulation-button" href="#simulasi" data-scenario="minimarket">
                   <i data-lucide="calculator" aria-hidden="true"></i>
                   Coba simulasi
                 </a>
@@ -209,7 +209,7 @@
                   <i data-lucide="bar-chart-3" aria-hidden="true"></i>
                   Lihat tesis
                 </button>
-                <a class="asset-button simulation-button" href="#simulasi">
+                <a class="asset-button simulation-button" href="#simulasi" data-scenario="franchise">
                   <i data-lucide="calculator" aria-hidden="true"></i>
                   Coba simulasi
                 </a>
@@ -234,7 +234,7 @@
                   <i data-lucide="bar-chart-3" aria-hidden="true"></i>
                   Lihat tesis
                 </button>
-                <a class="asset-button simulation-button" href="#simulasi">
+                <a class="asset-button simulation-button" href="#simulasi" data-scenario="productive">
                   <i data-lucide="calculator" aria-hidden="true"></i>
                   Coba simulasi
                 </a>
@@ -290,6 +290,7 @@
         </div>
         <div class="simulator-layout">
           <form class="sim-card" aria-label="Simulasi kontribusi">
+            <p class="scenario-pill" id="scenarioPill">Skenario aktif: Lahan dan bangunan disewa tenant</p>
             <label>
               <span>Kontribusi bulanan</span>
               <input id="monthlyInput" type="range" min="1000" max="2000000" step="1000" value="100000" />
@@ -301,11 +302,11 @@
               <output id="monthOutput">24 bulan</output>
             </label>
             <label>
-              <span>Yield sewa bersih simulasi</span>
-              <input id="yieldInput" type="range" min="3" max="10" step="0.1" value="6.8" />
-              <output id="yieldOutput">6,8%</output>
+              <span id="yieldLabel">Yield sewa bersih simulasi</span>
+              <input id="yieldInput" type="range" min="3" max="10" step="0.1" value="6.9" />
+              <output id="yieldOutput">6,9%</output>
             </label>
-            <p class="fineprint">
+            <p class="fineprint" id="simFineprint">
               Simulasi memakai aset contoh Rp1,65 M dengan unit Rp1.000. Angka
               bersifat edukasi dan bukan janji hasil.
             </p>
@@ -325,12 +326,12 @@
                 <strong id="ownershipShare">0,145%</strong>
               </div>
               <div>
-                <span>Estimasi distribusi/tahun</span>
+                <span id="distributionLabel">Estimasi distribusi/tahun</span>
                 <strong id="annualDistribution">Rp163.200</strong>
               </div>
               <div>
                 <span>Target dana aset</span>
-                <strong>Rp1,65 M</strong>
+                <strong id="targetAssetValue">Rp1,65 M</strong>
               </div>
             </div>
             <div class="progress-shell" aria-label="Progress porsi aset">

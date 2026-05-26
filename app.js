@@ -1,6 +1,33 @@
-const assetValue = 1_650_000_000;
 const unitPrice = 1_000;
 const whatsappNumber = "6285156955735";
+const scenarios = {
+  minimarket: {
+    title: "Lahan dan bangunan disewa tenant",
+    assetValue: 1_650_000_000,
+    targetLabel: "Rp1,65 M",
+    rate: 6.9,
+    rateLabel: "Yield sewa bersih simulasi",
+    distributionLabel: "Estimasi distribusi/tahun",
+  },
+  franchise: {
+    title: "Gerai ritel berbasis franchise",
+    assetValue: 850_000_000,
+    targetLabel: "Rp850 Jt",
+    rate: 8,
+    rateLabel: "Profit operasional simulasi",
+    distributionLabel: "Estimasi profit/tahun",
+  },
+  productive: {
+    title: "Aset properti produktif lain",
+    assetValue: 1_200_000_000,
+    targetLabel: "Rp1,2 M",
+    rate: 7,
+    rateLabel: "Yield bersih simulasi",
+    distributionLabel: "Estimasi distribusi/tahun",
+  },
+};
+
+let currentScenario = scenarios.minimarket;
 
 const formatRupiah = (value) =>
   new Intl.NumberFormat("id-ID", {
@@ -27,6 +54,11 @@ const ownershipShare = document.querySelector("#ownershipShare");
 const annualDistribution = document.querySelector("#annualDistribution");
 const progressBar = document.querySelector("#progressBar");
 const impactLine = document.querySelector("#impactLine");
+const scenarioPill = document.querySelector("#scenarioPill");
+const yieldLabel = document.querySelector("#yieldLabel");
+const simFineprint = document.querySelector("#simFineprint");
+const distributionLabel = document.querySelector("#distributionLabel");
+const targetAssetValue = document.querySelector("#targetAssetValue");
 
 function updateSimulation() {
   const monthly = Number(monthlyInput.value);
@@ -34,19 +66,33 @@ function updateSimulation() {
   const yieldRate = Number(yieldInput.value) / 100;
   const total = monthly * months;
   const units = Math.floor(total / unitPrice);
-  const ownership = total / assetValue;
-  const distribution = assetValue * yieldRate * ownership;
+  const ownership = total / currentScenario.assetValue;
+  const distribution = currentScenario.assetValue * yieldRate * ownership;
   const progress = Math.min(ownership * 100, 100);
 
+  scenarioPill.textContent = `Skenario aktif: ${currentScenario.title}`;
+  yieldLabel.textContent = currentScenario.rateLabel;
+  simFineprint.textContent = `Simulasi memakai ${currentScenario.title.toLowerCase()} dengan target dana ${currentScenario.targetLabel} dan unit Rp1.000. Angka bersifat edukasi dan bukan janji hasil.`;
+  distributionLabel.textContent = currentScenario.distributionLabel;
+  targetAssetValue.textContent = currentScenario.targetLabel;
   monthlyOutput.textContent = formatRupiah(monthly);
   monthOutput.textContent = `${months} bulan`;
-  yieldOutput.textContent = `${yieldInput.value.replace(".", ",")}%`;
+  yieldOutput.textContent = `${Number(yieldInput.value).toLocaleString("id-ID", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  })}%`;
   totalContribution.textContent = formatRupiah(total);
   unitCount.textContent = new Intl.NumberFormat("id-ID").format(units);
   ownershipShare.textContent = formatPercent(ownership * 100);
   annualDistribution.textContent = formatRupiah(distribution);
   progressBar.style.width = `${Math.max(progress, 0.8)}%`;
-  impactLine.textContent = `Dengan ${formatRupiah(monthly)}/bulan selama ${months} bulan, user membangun porsi ekonomi kecil tanpa perlu membeli tanah sendiri.`;
+  impactLine.textContent = `Dengan ${formatRupiah(monthly)}/bulan selama ${months} bulan, user membangun porsi ekonomi kecil pada ${currentScenario.title.toLowerCase()} tanpa perlu membeli aset penuh sendiri.`;
+}
+
+function setScenario(scenarioKey) {
+  currentScenario = scenarios[scenarioKey] || scenarios.minimarket;
+  yieldInput.value = String(currentScenario.rate);
+  updateSimulation();
 }
 
 [monthlyInput, monthInput, yieldInput].forEach((input) => {
@@ -72,6 +118,14 @@ document.querySelectorAll("[data-asset]").forEach((button) => {
       button.classList.remove("expanded");
       if (window.lucide) window.lucide.createIcons();
     }, 4800);
+  });
+});
+
+document.querySelectorAll("[data-scenario]").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    setScenario(button.dataset.scenario);
+    document.querySelector("#simulasi").scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
 

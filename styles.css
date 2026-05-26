@@ -56,7 +56,7 @@ select {
   top: 0;
   z-index: 50;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
   gap: 20px;
   min-height: 72px;
@@ -594,10 +594,11 @@ input[type="range"] {
 
 .founder-card {
   display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 34px;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 780px);
+  gap: 40px;
   align-items: center;
-  padding: 28px;
+  justify-content: start;
+  padding: 34px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
@@ -625,16 +626,31 @@ input[type="range"] {
 }
 
 .founder-copy {
+  display: grid;
+  align-content: start;
+  gap: 0;
   max-width: 760px;
 }
 
+.founder-copy .eyebrow {
+  margin-bottom: 12px;
+}
+
 .founder-name {
-  margin-bottom: 10px;
+  margin: 0 0 18px;
   color: var(--leaf);
   font-size: 1.02rem;
 }
 
+.founder-copy h2 {
+  max-width: 760px;
+  margin-bottom: 16px;
+  font-size: clamp(1.95rem, 3vw, 2.65rem);
+  line-height: 1.12;
+}
+
 .founder-copy p:not(.eyebrow) {
+  max-width: 820px;
   color: var(--muted);
   font-size: 1.06rem;
 }
@@ -903,7 +919,12 @@ input[type="range"] {
   }
 
   .founder-avatar {
-    width: 180px;
+    width: 200px;
+    justify-self: start;
+  }
+
+  .founder-copy {
+    min-height: 0;
   }
 }
 
@@ -1090,6 +1111,21 @@ dl div {
 .simulation-button {
   color: #07100a;
   background: var(--leaf);
+}
+
+.scenario-pill {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 36px;
+  align-items: center;
+  margin: 0 0 22px;
+  padding: 0 12px;
+  border: 1px solid rgba(55, 255, 139, 0.38);
+  border-radius: 8px;
+  color: var(--leaf);
+  background: #07100a;
+  font-size: 0.88rem;
 }
 
 .simulator-band {
@@ -1343,7 +1379,7 @@ dd,
 
 .founder-avatar {
   display: block;
-  width: min(100%, 220px);
+  width: min(100%, 260px);
   aspect-ratio: 1;
   object-fit: cover;
   object-position: center;
