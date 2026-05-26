@@ -59,8 +59,26 @@ const yieldLabel = document.querySelector("#yieldLabel");
 const simFineprint = document.querySelector("#simFineprint");
 const distributionLabel = document.querySelector("#distributionLabel");
 const targetAssetValue = document.querySelector("#targetAssetValue");
+const chainScenario = document.querySelector("#chainScenario");
+const contractAssetLabel = document.querySelector("#contractAssetLabel");
+const contractMintLabel = document.querySelector("#contractMintLabel");
+const contractShareLabel = document.querySelector("#contractShareLabel");
+const chainStatus = document.querySelector("#chainStatus");
+const chainBlock = document.querySelector("#chainBlock");
+const chainOrder = document.querySelector("#chainOrder");
+const chainUnits = document.querySelector("#chainUnits");
+const chainShare = document.querySelector("#chainShare");
+const chainDistribution = document.querySelector("#chainDistribution");
+const chainHash = document.querySelector("#chainHash");
+const ledgerList = document.querySelector("#ledgerList");
+const contractSimButton = document.querySelector("#contractSimButton");
+const contractResetButton = document.querySelector("#contractResetButton");
+const techSteps = Array.from(document.querySelectorAll("[data-tech-step]"));
+let techTimer;
+let techStatus = "ready";
+let activeTechStep = 0;
 
-function updateSimulation() {
+function getSimulationSnapshot() {
   const monthly = Number(monthlyInput.value);
   const months = Number(monthInput.value);
   const yieldRate = Number(yieldInput.value) / 100;
@@ -68,25 +86,104 @@ function updateSimulation() {
   const units = Math.floor(total / unitPrice);
   const ownership = total / currentScenario.assetValue;
   const distribution = currentScenario.assetValue * yieldRate * ownership;
-  const progress = Math.min(ownership * 100, 100);
+
+  return {
+    monthly,
+    months,
+    yieldRate,
+    total,
+    units,
+    ownership,
+    distribution,
+  };
+}
+
+function makeHash(input) {
+  let hash = 2166136261;
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  const base = (hash >>> 0).toString(16).padStart(8, "0");
+  return `0x${base}${base.slice(2)}${base.slice(0, 6)}${base.slice(4)}`;
+}
+
+function setTechStep(stepIndex, isConfirmed = false) {
+  techSteps.forEach((step, index) => {
+    step.classList.toggle("is-active", !isConfirmed && index === stepIndex);
+    step.classList.toggle("is-done", isConfirmed ? true : index < stepIndex);
+  });
+}
+
+function renderLedgerRows(snapshot, txHash) {
+  const rows = [
+    ["Whitelist", "KYC user lolos"],
+    ["Mint", `${new Intl.NumberFormat("id-ID").format(snapshot.units)} unit`],
+    ["Hash", `${txHash.slice(0, 10)}...${txHash.slice(-6)}`],
+    ["Distribusi", formatRupiah(snapshot.distribution)],
+  ];
+
+  ledgerList.innerHTML = rows
+    .map(
+      ([label, value]) => `
+        <div class="ledger-row">
+          <span>${label}</span>
+          <strong>${value}</strong>
+        </div>
+      `,
+    )
+    .join("");
+}
+
+function renderTechSimulation() {
+  const snapshot = getSimulationSnapshot();
+  const hashInput = `${currentScenario.title}:${snapshot.total}:${snapshot.units}:${yieldInput.value}`;
+  const txHash = makeHash(hashInput);
+  const blockNumber = 204817 + Math.round(snapshot.total / unitPrice) + Math.round(currentScenario.assetValue / 100_000_000);
+
+  chainScenario.textContent = currentScenario.title;
+  contractAssetLabel.textContent = currentScenario.targetLabel;
+  contractMintLabel.textContent = `${new Intl.NumberFormat("id-ID").format(snapshot.units)} unit`;
+  contractShareLabel.textContent = formatPercent(snapshot.ownership * 100);
+  chainBlock.textContent = `Block #${new Intl.NumberFormat("id-ID").format(blockNumber)}`;
+  chainOrder.textContent = formatRupiah(snapshot.total);
+  chainUnits.textContent = `${new Intl.NumberFormat("id-ID").format(snapshot.units)} unit`;
+  chainShare.textContent = formatPercent(snapshot.ownership * 100);
+  chainDistribution.textContent = formatRupiah(snapshot.distribution);
+  chainHash.textContent = txHash;
+  chainStatus.textContent =
+    techStatus === "confirmed"
+      ? "Confirmed on demo chain"
+      : techStatus === "running"
+        ? "Writing transaction..."
+        : "Ready to simulate";
+  renderLedgerRows(snapshot, txHash);
+  setTechStep(activeTechStep, techStatus === "confirmed");
+}
+
+function updateSimulation() {
+  const snapshot = getSimulationSnapshot();
+  const progress = Math.min(snapshot.ownership * 100, 100);
 
   scenarioPill.textContent = `Skenario aktif: ${currentScenario.title}`;
   yieldLabel.textContent = currentScenario.rateLabel;
   simFineprint.textContent = `Simulasi memakai ${currentScenario.title.toLowerCase()} dengan target dana ${currentScenario.targetLabel} dan unit Rp1.000. Angka bersifat edukasi dan bukan janji hasil.`;
   distributionLabel.textContent = currentScenario.distributionLabel;
   targetAssetValue.textContent = currentScenario.targetLabel;
-  monthlyOutput.textContent = formatRupiah(monthly);
-  monthOutput.textContent = `${months} bulan`;
+  monthlyOutput.textContent = formatRupiah(snapshot.monthly);
+  monthOutput.textContent = `${snapshot.months} bulan`;
   yieldOutput.textContent = `${Number(yieldInput.value).toLocaleString("id-ID", {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   })}%`;
-  totalContribution.textContent = formatRupiah(total);
-  unitCount.textContent = new Intl.NumberFormat("id-ID").format(units);
-  ownershipShare.textContent = formatPercent(ownership * 100);
-  annualDistribution.textContent = formatRupiah(distribution);
+  totalContribution.textContent = formatRupiah(snapshot.total);
+  unitCount.textContent = new Intl.NumberFormat("id-ID").format(snapshot.units);
+  ownershipShare.textContent = formatPercent(snapshot.ownership * 100);
+  annualDistribution.textContent = formatRupiah(snapshot.distribution);
   progressBar.style.width = `${Math.max(progress, 0.8)}%`;
-  impactLine.textContent = `Dengan ${formatRupiah(monthly)}/bulan selama ${months} bulan, user membangun porsi ekonomi kecil pada ${currentScenario.title.toLowerCase()} tanpa perlu membeli aset penuh sendiri.`;
+  impactLine.textContent = `Dengan ${formatRupiah(snapshot.monthly)}/bulan selama ${snapshot.months} bulan, user membangun porsi ekonomi kecil pada ${currentScenario.title.toLowerCase()} tanpa perlu membeli aset penuh sendiri.`;
+  renderTechSimulation();
 }
 
 function setScenario(scenarioKey) {
@@ -129,6 +226,30 @@ document.querySelectorAll("[data-scenario]").forEach((button) => {
   });
 });
 
+contractSimButton.addEventListener("click", () => {
+  window.clearInterval(techTimer);
+  techStatus = "running";
+  activeTechStep = 0;
+  renderTechSimulation();
+
+  techTimer = window.setInterval(() => {
+    activeTechStep += 1;
+    if (activeTechStep >= techSteps.length) {
+      window.clearInterval(techTimer);
+      activeTechStep = techSteps.length - 1;
+      techStatus = "confirmed";
+    }
+    renderTechSimulation();
+  }, 620);
+});
+
+contractResetButton.addEventListener("click", () => {
+  window.clearInterval(techTimer);
+  techStatus = "ready";
+  activeTechStep = 0;
+  renderTechSimulation();
+});
+
 document.querySelector("#waitlistButton").addEventListener("click", () => {
   const status = document.querySelector("#formStatus");
   const name = document.querySelector("#nameInput")?.value?.trim() || "Saya";
@@ -141,7 +262,7 @@ document.querySelector("#waitlistButton").addEventListener("click", () => {
 function initMobileAutoSliders() {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const mobileQuery = window.matchMedia("(max-width: 700px)");
-  const sliderSelectors = [".signal-strip", ".product-grid", ".asset-grid", ".flow-list", ".research-grid"];
+  const sliderSelectors = [".signal-strip", ".product-grid", ".asset-grid", ".contract-steps", ".flow-list", ".research-grid"];
   const sliders = sliderSelectors.flatMap((selector) => Array.from(document.querySelectorAll(selector)));
 
   if (!sliders.length) return;

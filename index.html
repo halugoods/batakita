@@ -345,6 +345,95 @@
         </div>
       </section>
 
+      <section class="section tech-band" id="teknologi">
+        <div class="section-heading split">
+          <div>
+            <p class="eyebrow">Simulasi teknologi</p>
+            <h2>Smart contract sebagai mesin pencatat unit ekonomi.</h2>
+          </div>
+          <p>
+            Demo ini memperlihatkan bagaimana kontribusi Rupiah diterjemahkan
+            menjadi unit ekonomi, dicatat sebagai transaksi, lalu dipakai untuk
+            menghitung porsi distribusi secara transparan.
+          </p>
+        </div>
+        <div class="tech-layout">
+          <div class="tech-console">
+            <div class="tech-console-head">
+              <span id="chainScenario">Lahan dan bangunan disewa tenant</span>
+              <strong>Demo ledger</strong>
+            </div>
+            <div class="contract-steps" aria-label="Tahapan smart contract">
+              <div class="contract-step is-active" data-tech-step="0">
+                <i data-lucide="user-check" aria-hidden="true"></i>
+                <span>Whitelist user</span>
+              </div>
+              <div class="contract-step" data-tech-step="1">
+                <i data-lucide="wallet" aria-hidden="true"></i>
+                <span>Map Rupiah</span>
+              </div>
+              <div class="contract-step" data-tech-step="2">
+                <i data-lucide="blocks" aria-hidden="true"></i>
+                <span>Mint unit</span>
+              </div>
+              <div class="contract-step" data-tech-step="3">
+                <i data-lucide="hash" aria-hidden="true"></i>
+                <span>Write hash</span>
+              </div>
+              <div class="contract-step" data-tech-step="4">
+                <i data-lucide="send" aria-hidden="true"></i>
+                <span>Distribusi</span>
+              </div>
+            </div>
+            <div class="code-window" aria-label="Contoh pseudo smart contract">
+              <div><span>contract</span> BataKitaAsset</div>
+              <div><span>asset</span> <strong id="contractAssetLabel">Rp1,65 M</strong></div>
+              <div><span>mint</span> <strong id="contractMintLabel">2.400 unit</strong></div>
+              <div><span>share</span> <strong id="contractShareLabel">0,145%</strong></div>
+            </div>
+            <div class="tech-actions">
+              <button class="btn primary" id="contractSimButton" type="button">
+                <i data-lucide="play" aria-hidden="true"></i>
+                Jalankan Simulasi
+              </button>
+              <button class="btn secondary" id="contractResetButton" type="button">
+                <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+                Reset
+              </button>
+            </div>
+          </div>
+          <div class="chain-panel">
+            <div class="chain-top">
+              <span id="chainStatus">Ready to simulate</span>
+              <strong id="chainBlock">Block #204817</strong>
+            </div>
+            <div class="chain-grid">
+              <div>
+                <span>Order simulasi</span>
+                <strong id="chainOrder">Rp2.400.000</strong>
+              </div>
+              <div>
+                <span>Token ekonomi</span>
+                <strong id="chainUnits">2.400 unit</strong>
+              </div>
+              <div>
+                <span>Porsi tercatat</span>
+                <strong id="chainShare">0,145%</strong>
+              </div>
+              <div>
+                <span>Estimasi distribusi</span>
+                <strong id="chainDistribution">Rp165.600</strong>
+              </div>
+            </div>
+            <div class="hash-box">
+              <span>Transaction hash</span>
+              <strong id="chainHash">0x8c1f...9ad2</strong>
+            </div>
+            <div class="ledger-list" id="ledgerList" aria-label="Riwayat ledger simulasi"></div>
+          </div>
+        </div>
+      </section>
+
       <section class="section flow-band" id="cara-kerja">
         <div class="section-heading split">
           <div>

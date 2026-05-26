@@ -556,6 +556,150 @@ input[type="range"] {
   font-weight: 800;
 }
 
+.tech-band {
+  background: #06100a;
+  color: #fff;
+}
+
+.tech-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.tech-console,
+.chain-panel {
+  min-width: 0;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.tech-console-head,
+.chain-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+.tech-console-head span,
+.chain-top span,
+.chain-grid span,
+.hash-box span,
+.ledger-row span {
+  color: var(--muted);
+}
+
+.contract-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.contract-step {
+  display: grid;
+  min-height: 92px;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid rgba(55, 255, 139, 0.2);
+  border-radius: 8px;
+  color: #9cafb0;
+  background: #07100a;
+  text-align: center;
+  transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
+}
+
+.contract-step svg {
+  width: 22px;
+  height: 22px;
+}
+
+.contract-step.is-active,
+.contract-step.is-done {
+  border-color: rgba(55, 255, 139, 0.64);
+  color: var(--leaf);
+  background: rgba(55, 255, 139, 0.08);
+}
+
+.code-window {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 18px;
+  border: 1px solid rgba(55, 255, 139, 0.28);
+  border-radius: 8px;
+  background: #020403;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.92rem;
+}
+
+.code-window div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.code-window span {
+  color: #7b9188;
+}
+
+.code-window strong,
+.chain-panel strong {
+  color: var(--leaf);
+}
+
+.tech-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.chain-grid div,
+.hash-box,
+.ledger-row {
+  padding: 14px;
+  border: 1px solid rgba(55, 255, 139, 0.22);
+  border-radius: 8px;
+  background: #07100a;
+}
+
+.chain-grid strong,
+.hash-box strong {
+  display: block;
+  margin-top: 6px;
+  word-break: break-word;
+}
+
+.hash-box {
+  margin-bottom: 14px;
+}
+
+.ledger-list {
+  display: grid;
+  gap: 8px;
+}
+
+.ledger-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+}
+
 .flow-list {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -908,6 +1052,7 @@ input[type="range"] {
 
   .section-heading.split,
   .simulator-layout,
+  .tech-layout,
   .founder-card,
   .dashboard-band,
   .waitlist-band {
@@ -966,6 +1111,7 @@ input[type="range"] {
   .signal-strip,
   .product-grid,
   .asset-grid,
+  .contract-steps,
   .flow-list,
   .research-grid,
   .result-grid {
@@ -1285,6 +1431,7 @@ dl div {
   .signal-strip::-webkit-scrollbar,
   .product-grid::-webkit-scrollbar,
   .asset-grid::-webkit-scrollbar,
+  .contract-steps::-webkit-scrollbar,
   .flow-list::-webkit-scrollbar,
   .research-grid::-webkit-scrollbar,
   .result-grid::-webkit-scrollbar {
@@ -1294,6 +1441,7 @@ dl div {
   .signal-strip > div,
   .product-grid > *,
   .asset-grid > *,
+  .contract-steps > *,
   .flow-list > *,
   .research-grid > *,
   .result-grid > * {
@@ -1307,6 +1455,18 @@ dl div {
 
   .asset-card img {
     aspect-ratio: 16 / 11;
+  }
+
+  .contract-steps > * {
+    flex-basis: min(58vw, 220px);
+  }
+
+  .chain-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tech-actions .btn {
+    width: 100%;
   }
 
   .research-item img {
